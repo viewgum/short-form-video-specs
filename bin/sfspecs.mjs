@@ -81,7 +81,6 @@ function sizeOf(raw) {
   const m = /^(\d+)x(\d+)$/.exec(raw);
   const size = m && { width: Number(m[1]), height: Number(m[2]) };
   if (!size || ![size.width, size.height].every((v) => Number.isSafeInteger(v) && v > 0)) fail(`--size must look like 1080x1920, got ${raw}`);
-  if (Math.abs(size.width / size.height - 9 / 16) > 0.01) process.stderr.write(`Note: ${raw} is not 9:16, so the boxes are the 9:16 presets stretched to it.\n`);
   return size;
 }
 
@@ -91,6 +90,13 @@ function numberOf(raw, name) {
 }
 
 const platformOf = (raw) => raw ?? "all";
+
+// A frame that is not exactly 9:16 gets the presets stretched to it; say so where the answer is read.
+function noteStretch(frame, toStderr = false) {
+  if (frame.width * 16 === frame.height * 9) return;
+  const note = `Note: ${frame.width} x ${frame.height} is not 9:16, so these are the 9:16 presets stretched to it.\n`;
+  (toStderr ? process.stderr : process.stdout).write(note);
+}
 const nameOf = (id) => (id === "all" ? "all four apps at once" : safeZones.platforms[id].name);
 
 function cmdMargins(o) {
@@ -100,7 +106,8 @@ function cmdMargins(o) {
     const box = attempt(() => safeBox(id, frame));
     return { id, name: nameOf(id), box, margins: marginsOf(box, frame) };
   });
-  if (o.json) return void process.stdout.write(`${JSON.stringify({ frame, zones: rows }, null, 2)}\n`);
+  if (o.json) return void process.stdout.write(`${JSON.stringify({ frame, ninebysixteen: frame.width * 16 === frame.height * 9, zones: rows }, null, 2)}\n`);
+  noteStretch(frame);
   process.stdout.write(`Margins on ${frame.width} x ${frame.height} (px)\n`);
   for (const r of rows) {
     const m = r.margins;
@@ -116,11 +123,12 @@ function cmdCheck(o) {
   if (parts.length !== 4) fail("--rect must be four numbers: x,y,width,height");
   const [x, y, width, height] = parts.map((p) => numberOf(p.trim(), "--rect"));
   const result = attempt(() => checkRect({ x, y, width, height }, platformOf(o.platform), frame));
+  noteStretch(frame);
   if (!result.clear) {
-    process.stdout.write(`Not inside the published safe zone for ${result.platform}: ${result.problems.join("; ")}.\n`);
+    process.stdout.write(`Not inside the published 9:16 ad safe zone for ${result.platform}: ${result.problems.join("; ")}.\n`);
     process.exit(1);
   }
-  process.stdout.write(`Inside the published safe zone for ${result.platform}${result.unmodelled ? ` (${result.unmodelled})` : ""}.\n`);
+  process.stdout.write(`Inside the published 9:16 ad safe zone for ${result.platform}${result.unmodelled ? ` (${result.unmodelled})` : ""}.\n`);
 }
 
 function cmdSpan(o) {
@@ -129,6 +137,7 @@ function cmdSpan(o) {
   const bottom = numberOf(o.bottom, "--bottom");
   const id = platformOf(o.platform);
   const s = attempt(() => centredSpan(bottom, id, frame));
+  noteStretch(frame);
   const left = Math.ceil(s.left * 10) / 10;
   const right = Math.floor(s.right * 10) / 10;
   process.stdout.write(`On ${nameOf(id)}, a centred box ending at y ${bottom} can run from x ${left} to ${right} (${round(right - left)} px wide).\n`);
@@ -136,6 +145,7 @@ function cmdSpan(o) {
 
 function cmdOverlay(o) {
   const frame = sizeOf(o.size);
+  noteStretch(frame, true);
   process.stdout.write(`${attempt(() => overlaySvg(platformOf(o.platform), frame, { grid: Boolean(o.grid) }))}\n`);
 }
 

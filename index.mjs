@@ -3,6 +3,8 @@ import { safeZones, lengthLimits, textLimits, speakingRates } from "./lib/data.m
 export { safeZones, lengthLimits, textLimits, speakingRates };
 
 const BASE = safeZones.frame;
+// Pixel sums such as 76.9 + 278.3 land a hair past an exact edge in floating point.
+const EPS = 1e-6;
 const isPositive = (v) => typeof v === "number" && Number.isFinite(v) && v > 0;
 
 /** The platform ids, plus "all" for the box inside every app's published safe zone at once. */
@@ -17,7 +19,7 @@ function frameOf(size) {
 function zoneOf(platform) {
   if (platform === undefined || platform === "all") return { id: "all", name: "all four apps at once", box: safeZones.clearOnEvery.box };
   if (typeof platform !== "string" || !Object.hasOwn(safeZones.platforms, platform)) {
-    throw new RangeError(`Unknown platform "${platform}". Use one of: ${platformIds.join(", ")}`);
+    throw new RangeError(`Unknown platform "${String(platform)}". Use one of: ${platformIds.join(", ")}`);
   }
   const p = safeZones.platforms[platform];
   return { id: platform, name: p.name, box: p.box };
@@ -26,6 +28,7 @@ function zoneOf(platform) {
 const UNMODELLED = {
   "instagram-reels": "Meta's lower-right icons are not modelled: it publishes only percentage margins",
   "facebook-reels": "Meta's lower-right icons are not modelled: it publishes only percentage margins",
+  all: "Meta's lower-right Reels icons are not modelled: it publishes only percentage margins",
 };
 
 /** True when the box has a button column that steps in from railTop down. */
@@ -60,14 +63,14 @@ export function checkRect(rect, platform = "all", size) {
   const right = x + width;
   const bottom = y + height;
   const problems = [];
-  if (y < b.top) problems.push(`top edge ${y} is above ${round(b.top, 2)}`);
-  if (bottom > b.bottom) problems.push(`bottom edge ${bottom} is below ${round(b.bottom, 2)}`);
-  if (x < b.left) problems.push(`left edge ${x} is left of ${round(b.left, 2)}`);
-  if (right > b.right) problems.push(`right edge ${right} is right of ${round(b.right, 2)}`);
-  if (hasButtonColumn(b) && bottom > b.railTop && y < b.bottom && right > b.railLeft) {
+  if (y < b.top - EPS) problems.push(`top edge ${y} is above ${round(b.top, 2)}`);
+  if (bottom > b.bottom + EPS) problems.push(`bottom edge ${bottom} is below ${round(b.bottom, 2)}`);
+  if (x < b.left - EPS) problems.push(`left edge ${x} is left of ${round(b.left, 2)}`);
+  if (right > b.right + EPS) problems.push(`right edge ${right} is right of ${round(b.right, 2)}`);
+  if (hasButtonColumn(b) && bottom > b.railTop + EPS && y < b.bottom && right > b.railLeft + EPS) {
     problems.push(`it reaches the button column (below y ${round(b.railTop, 2)}, right of x ${round(b.railLeft, 2)})`);
   }
-  return { clear: problems.length === 0, platform: zoneOf(platform).name, problems, unmodelled: UNMODELLED[platform] ?? null };
+  return { clear: problems.length === 0, platform: zoneOf(platform).name, problems, unmodelled: UNMODELLED[platform ?? "all"] ?? null };
 }
 
 /** The widest box centred on the frame whose lowest edge is at `bottom`, which must lie inside the safe zone's height. */

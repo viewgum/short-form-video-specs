@@ -63,6 +63,9 @@ assert.equal(lib.centredSpan(462, "tiktok", { width: 396, height: 704 }).width, 
 assert.deepEqual(lib.checkRect({ x: 800, y: 1400, width: 20, height: 30 }).problems, ["bottom edge 1430 is below 1248"], "below the column's end only the bottom fails");
 assert.equal(lib.checkRect({ x: 940, y: 1200, width: 50, height: 30 }, "instagram-reels").unmodelled !== null, true);
 assert.throws(() => lib.wordsFor(1e306), RangeError);
+assert.equal(lib.checkRect({ x: 76.9, y: 160, width: 278.3, height: 40 }, "all", { width: 432, height: 768 }).clear, true, "float sums at an exact edge");
+assert.ok(lib.checkRect({ x: 750, y: 1200, width: 30, height: 30 }).unmodelled, "the all-apps answer carries the Reels caveat");
+assert.throws(() => lib.safeBox(Symbol("x")), RangeError);
 assert.deepEqual(lib.wordsFor(22).map((r) => r.words), [55, 67, 71]);
 assert.throws(() => lib.safeBox("snapchat"), RangeError);
 assert.throws(() => lib.safeBox("toString"), RangeError);
@@ -101,5 +104,9 @@ assert.match(cli(["check", "--platform", "instagram-reels", "--rect", "940,1200,
 assert.match(cli(["span", "--bottom", "800", "--platform", "instagram-reels", "--size", "720x1280"]).out, /from x 43\.4 to 676\.6 \(633\.2 px wide\)/);
 assert.equal(cli(["check", "--rect", "43.4,700,633.2,100", "--platform", "instagram-reels", "--size", "720x1280"]).code, 0);
 assert.match(cli(["margins", "--size", "1920x1080"]).out, /not 9:16/);
+assert.match(cli(["check", "--rect", "100,200,10,10", "--size", "1080x1900"]).out, /not 9:16/);
+assert.doesNotMatch(cli(["check", "--rect", "300,400,10,10", "--size", "720x1280"]).out, /not 9:16/);
+const span = cli(["span", "--bottom", "200", "--size", "432x768"]).out.match(/from x ([\d.]+) to ([\d.]+) \(([\d.]+) px wide\)/);
+assert.equal(cli(["check", "--rect", `${span[1]},160,${span[3]},40`, "--size", "432x768"]).code, 0, "a printed span passes check");
 assert.equal(cli(["margins", "--size", "100000x177778"]).code, 0);
 console.log("ok");

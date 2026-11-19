@@ -60,11 +60,12 @@ npx github:viewgum/short-form-video-specs limits
 ```
 
 `check` exits 0 when the box is inside the published safe zone, 1 when it is not and 2 on bad input, so it fits in a render
-script:
+script. An answer that covers Reels says that Meta's lower-right icons are not modelled, and a frame that is not exactly 9:16
+gets a note that the presets were stretched:
 
 ```
 $ sfspecs check --rect 140,900,700,200
-Not inside the published safe zone for all four apps at once: it reaches the button column (below y 840, right of x 780).
+Not inside the published 9:16 ad safe zone for all four apps at once: it reaches the button column (below y 840, right of x 780).
 ```
 
 ## JavaScript
