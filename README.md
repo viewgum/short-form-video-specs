@@ -102,7 +102,7 @@ stretched to it.
 | File | What it holds |
 |---|---|
 | [`data/safe-zones.json`](data/safe-zones.json) | Each app's box, margins, clear rectangles and sources; the box inside all four; 16:9 title and action safe from SMPTE ST 2046-1 |
-| [`data/length-limits.json`](data/length-limits.json) | How long a post can be: Shorts 3 minutes; Reels 20 minutes in the app (3 seconds to 15 minutes through the API); Facebook reels no limit in the app (3 to 90 seconds through the Page API); TikTok no single published figure (the posting API gives each account its own) |
+| [`data/length-limits.json`](data/length-limits.json) | How long a post can be, by route: Shorts 3 minutes; TikTok 60 minutes uploaded in the phone app, 30 minutes on the web, 10 minutes recorded in the app or sent through the API; Reels 20 minutes recorded and edited in the app (3 seconds to 15 minutes through the API); Facebook reels no limit in the app (3 to 90 seconds through the Page API) |
 | [`data/text-limits.json`](data/text-limits.json) | Title, caption and hashtag limits, with the route each applies to: YouTube title 100 and description 5,000 characters; TikTok and Instagram captions 2,200 through their APIs; Instagram 5 hashtags in the app |
 | [`data/speaking-rates.json`](data/speaking-rates.json) | Three measured English speaking rates (150, 183 and 196 words a minute) used as slow, normal and fast presets for script length |
 

@@ -33,6 +33,8 @@ export declare const lengthLimits: {
     rule: string;
     sources: Source[];
     nonSparkAdsMaxSeconds?: number;
+    webMaxSeconds?: number;
+    recordMaxSeconds?: number;
     recommendedToNewAudiencesUpToSeconds?: number;
     apiMinSeconds?: number;
     apiMaxSeconds?: number;
