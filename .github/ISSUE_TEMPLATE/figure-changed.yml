@@ -1,0 +1,26 @@
+name: A figure changed
+description: An app moved its overlays or changed a limit.
+title: "Figure changed: "
+body:
+  - type: input
+    id: app
+    attributes:
+      label: App
+      placeholder: TikTok, YouTube Shorts, Instagram Reels or Facebook Reels
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Page that publishes the new figure
+      description: The app's own help, ads or developer page.
+      placeholder: https://
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: What changed
+      description: The old figure, the new one, and the date you read it.
+    validations:
+      required: true

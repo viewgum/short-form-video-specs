@@ -1,0 +1,28 @@
+{
+  "name": "short-form-video-specs",
+  "version": "2026.11.18",
+  "description": "Safe zones for TikTok, YouTube Shorts, Instagram Reels and Facebook Reels in pixels, length and caption limits, as JSON, PNG templates, a JavaScript module and a CLI.",
+  "type": "module",
+  "main": "./index.mjs",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": { "types": "./index.d.ts", "default": "./index.mjs" },
+    "./safe-zones.json": "./data/safe-zones.json",
+    "./length-limits.json": "./data/length-limits.json",
+    "./text-limits.json": "./data/text-limits.json",
+    "./speaking-rates.json": "./data/speaking-rates.json"
+  },
+  "bin": { "sfspecs": "bin/sfspecs.mjs" },
+  "files": ["bin", "data", "lib", "templates", "index.mjs", "index.d.ts", "LICENSE", "README.md"],
+  "scripts": {
+    "build": "node scripts/build-data.mjs",
+    "test": "node test.mjs"
+  },
+  "engines": { "node": ">=18" },
+  "keywords": ["safe-zone", "tiktok", "youtube-shorts", "instagram-reels", "facebook-reels", "vertical-video", "9x16", "captions", "template"],
+  "author": "ViewGum (https://viewgum.com)",
+  "license": "(MIT AND CC-BY-4.0)",
+  "homepage": "https://github.com/viewgum/short-form-video-specs#readme",
+  "bugs": "https://github.com/viewgum/short-form-video-specs/issues",
+  "repository": { "type": "git", "url": "git+https://github.com/viewgum/short-form-video-specs.git" }
+}
