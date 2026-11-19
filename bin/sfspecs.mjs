@@ -78,9 +78,11 @@ function attempt(fn) {
 
 function sizeOf(raw) {
   if (raw === undefined) return { width: safeZones.frame.width, height: safeZones.frame.height };
-  const m = /^(\d{1,5})x(\d{1,5})$/.exec(raw);
-  if (!m || Number(m[1]) === 0 || Number(m[2]) === 0) fail(`--size must look like 1080x1920, got ${raw}`);
-  return { width: Number(m[1]), height: Number(m[2]) };
+  const m = /^(\d+)x(\d+)$/.exec(raw);
+  const size = m && { width: Number(m[1]), height: Number(m[2]) };
+  if (!size || ![size.width, size.height].every((v) => Number.isSafeInteger(v) && v > 0)) fail(`--size must look like 1080x1920, got ${raw}`);
+  if (Math.abs(size.width / size.height - 9 / 16) > 0.01) process.stderr.write(`Note: ${raw} is not 9:16, so the boxes are the 9:16 presets stretched to it.\n`);
+  return size;
 }
 
 function numberOf(raw, name) {
@@ -115,10 +117,10 @@ function cmdCheck(o) {
   const [x, y, width, height] = parts.map((p) => numberOf(p.trim(), "--rect"));
   const result = attempt(() => checkRect({ x, y, width, height }, platformOf(o.platform), frame));
   if (!result.clear) {
-    process.stdout.write(`Not inside the safe zone on ${result.platform}: ${result.problems.join("; ")}.\n`);
+    process.stdout.write(`Not inside the published safe zone for ${result.platform}: ${result.problems.join("; ")}.\n`);
     process.exit(1);
   }
-  process.stdout.write(`Inside the safe zone on ${result.platform}.\n`);
+  process.stdout.write(`Inside the published safe zone for ${result.platform}${result.unmodelled ? ` (${result.unmodelled})` : ""}.\n`);
 }
 
 function cmdSpan(o) {
@@ -127,7 +129,9 @@ function cmdSpan(o) {
   const bottom = numberOf(o.bottom, "--bottom");
   const id = platformOf(o.platform);
   const s = attempt(() => centredSpan(bottom, id, frame));
-  process.stdout.write(`On ${nameOf(id)}, a centred box ending at y ${bottom} can run from x ${round(s.left)} to ${round(s.right)} (${round(s.width)} px wide).\n`);
+  const left = Math.ceil(s.left * 10) / 10;
+  const right = Math.floor(s.right * 10) / 10;
+  process.stdout.write(`On ${nameOf(id)}, a centred box ending at y ${bottom} can run from x ${left} to ${right} (${round(right - left)} px wide).\n`);
 }
 
 function cmdOverlay(o) {
@@ -160,7 +164,7 @@ function cmdLimits(o) {
     const parts = [];
     if (p.titleMax) parts.push(`Title up to ${p.titleMax.toLocaleString("en-US")} characters`);
     if (p.descriptionMax) parts.push(`Description up to ${p.descriptionMax.toLocaleString("en-US")}`);
-    if (p.captionMax) parts.push(`Caption up to ${p.captionMax.toLocaleString("en-US")} characters`);
+    if (p.captionMax) parts.push(`Caption up to ${p.captionMax.toLocaleString("en-US")} ${p.counting ?? "characters"}`);
     if (p.hashtags) parts.push(p.hashtags.over);
     if (p.note) parts.push(p.note);
     process.stdout.write(`  ${p.name}: ${parts.join(". ")}.\n`);

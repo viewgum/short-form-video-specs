@@ -4,11 +4,12 @@ Safe zones for TikTok, YouTube Shorts, Instagram Reels and Facebook Reels in pix
 JavaScript module and a small command line tool. No dependencies.
 
 On a 1080 x 1920 frame, text that stays at least **288 px from the top, 672 px from the bottom, 120 px from the left and 192 px
-from the right, and out of the right 300 px below y = 840** is inside the published safe zone of all four apps at once.
+from the right, and out of the right 300 px below y = 840** is inside all four apps' published 9:16 safe zones at once.
 
-The apps publish pixel figures only in their 9:16 ad guidance, so these boxes are those presets. What an app covers also changes
-with the placement, the caption's length, the reading direction and the app version; regular posts cover about the same areas.
-Each entry in [`data/`](data) names its source (the app's own guidance, a standard or a study) and the day it was read.
+The apps publish pixel figures only in their 9:16 ad guidance, so these boxes are those presets, not a guarantee: what an app
+covers also changes with the placement, the caption's length, the reading direction and the app version. Each entry in
+[`data/`](data) names its source (the app's own guidance, a standard or a study) and the day it was read; the all-apps box,
+spans and word counts are calculated from them.
 
 ## Safe zones at 1080 x 1920
 
@@ -23,8 +24,8 @@ Each entry in [`data/`](data) names its source (the app's own guidance, a standa
 The box inside all four is 768 x 552 px above y = 840 and 660 x 408 px below it. A caption centred on the frame can be 696 px wide
 above y = 840 (x 192 to 888) and 480 px wide below it (x 300 to 780).
 
-Reels show like, comment and share icons on the lower right. Meta publishes no width for them beyond its 6% side margin, so if
-you post only to Reels, keep a column on the right clear as you would for TikTok.
+Reels show like, comment and share icons on the lower right. Meta publishes no width for them beyond its 6% side margin, so they
+are not modelled here; `check` says so for Reels. Keep text away from them.
 
 ## Templates
 
@@ -58,11 +59,12 @@ npx github:viewgum/short-form-video-specs words --seconds 60
 npx github:viewgum/short-form-video-specs limits
 ```
 
-`check` exits 0 when the box is inside the safe zone, 1 when it is not and 2 on bad input, so it fits in a render script:
+`check` exits 0 when the box is inside the published safe zone, 1 when it is not and 2 on bad input, so it fits in a render
+script:
 
 ```
 $ sfspecs check --rect 140,900,700,200
-Not inside the safe zone on all four apps at once: it reaches the button column (below y 840, right of x 780).
+Not inside the published safe zone for all four apps at once: it reaches the button column (below y 840, right of x 780).
 ```
 
 ## JavaScript
@@ -89,8 +91,10 @@ overlaySvg("tiktok", { width: 720, height: 1280 }, { grid: true }); // an SVG st
 ```
 
 Types are in [`index.d.ts`](index.d.ts). Platform ids: `tiktok`, `youtube-shorts`, `instagram-reels`, `facebook-reels`, and
-`all` for the box inside all four. The functions throw a `RangeError` on bad input and do not round; `round()` is there for
-display.
+`all` for the box inside all four. `safeBox`, `checkRect`, `centredSpan` and `wordsFor` throw a `RangeError` on bad input. Box
+values are exact; `overlaySvg` writes coordinates to two decimals, and `round()` is there for display. `checkRect` also returns
+`unmodelled`, a note for the apps whose overlays the data does not fully cover. A frame that is not 9:16 gets the presets
+stretched to it.
 
 ## The data
 

@@ -32,7 +32,7 @@ export declare const lengthLimits: {
     maxSeconds: number | null;
     rule: string;
     sources: Source[];
-    adsMaxSeconds?: number;
+    nonSparkAdsMaxSeconds?: number;
     recommendedToNewAudiencesUpToSeconds?: number;
     apiMinSeconds?: number;
     apiMaxSeconds?: number;
@@ -68,7 +68,7 @@ export declare const platformIds: PlatformId[];
 export declare function hasButtonColumn(box: SafeBox): boolean;
 export declare function safeBox(platform?: PlatformId, size?: Size): SafeBox;
 export declare function marginsOf(box: SafeBox, size?: Size): Margins;
-export declare function checkRect(rect: Rect, platform?: PlatformId, size?: Size): { clear: boolean; platform: string; problems: string[] };
+export declare function checkRect(rect: Rect, platform?: PlatformId, size?: Size): { clear: boolean; platform: string; problems: string[]; unmodelled: string | null };
 export declare function centredSpan(bottom: number, platform?: PlatformId, size?: Size): { left: number; right: number; width: number };
 export declare function overlaySvg(platform?: PlatformId, size?: Size, options?: { grid?: boolean }): string;
 export declare function wordsFor(seconds: number): Array<{ id: "slow" | "normal" | "fast"; wpm: number; words: number }>;

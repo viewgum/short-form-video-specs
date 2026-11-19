@@ -23,6 +23,11 @@ function zoneOf(platform) {
   return { id: platform, name: p.name, box: p.box };
 }
 
+const UNMODELLED = {
+  "instagram-reels": "Meta's lower-right icons are not modelled: it publishes only percentage margins",
+  "facebook-reels": "Meta's lower-right icons are not modelled: it publishes only percentage margins",
+};
+
 /** True when the box has a button column that steps in from railTop down. */
 export function hasButtonColumn(box) {
   return box.railTop < box.bottom && box.railLeft < box.right;
@@ -32,16 +37,9 @@ export function hasButtonColumn(box) {
 export function safeBox(platform = "all", size) {
   const frame = frameOf(size);
   const { box } = zoneOf(platform);
-  const sx = frame.width / BASE.width;
-  const sy = frame.height / BASE.height;
-  return {
-    left: box.left * sx,
-    right: box.right * sx,
-    top: box.top * sy,
-    bottom: box.bottom * sy,
-    railTop: box.railTop * sy,
-    railLeft: box.railLeft * sx,
-  };
+  const x = (v) => (v * frame.width) / BASE.width;
+  const y = (v) => (v * frame.height) / BASE.height;
+  return { left: x(box.left), right: x(box.right), top: y(box.top), bottom: y(box.bottom), railTop: y(box.railTop), railLeft: x(box.railLeft) };
 }
 
 /** The margins a box leaves on each side of a frame, and its button column if it has one. */
@@ -62,14 +60,14 @@ export function checkRect(rect, platform = "all", size) {
   const right = x + width;
   const bottom = y + height;
   const problems = [];
-  if (y < b.top) problems.push(`top edge ${y} is above ${round(b.top)}`);
-  if (bottom > b.bottom) problems.push(`bottom edge ${bottom} is below ${round(b.bottom)}`);
-  if (x < b.left) problems.push(`left edge ${x} is left of ${round(b.left)}`);
-  if (right > b.right) problems.push(`right edge ${right} is right of ${round(b.right)}`);
-  if (hasButtonColumn(b) && bottom > b.railTop && right > b.railLeft) {
-    problems.push(`it reaches the button column (below y ${round(b.railTop)}, right of x ${round(b.railLeft)})`);
+  if (y < b.top) problems.push(`top edge ${y} is above ${round(b.top, 2)}`);
+  if (bottom > b.bottom) problems.push(`bottom edge ${bottom} is below ${round(b.bottom, 2)}`);
+  if (x < b.left) problems.push(`left edge ${x} is left of ${round(b.left, 2)}`);
+  if (right > b.right) problems.push(`right edge ${right} is right of ${round(b.right, 2)}`);
+  if (hasButtonColumn(b) && bottom > b.railTop && y < b.bottom && right > b.railLeft) {
+    problems.push(`it reaches the button column (below y ${round(b.railTop, 2)}, right of x ${round(b.railLeft, 2)})`);
   }
-  return { clear: problems.length === 0, platform: zoneOf(platform).name, problems };
+  return { clear: problems.length === 0, platform: zoneOf(platform).name, problems, unmodelled: UNMODELLED[platform] ?? null };
 }
 
 /** The widest box centred on the frame whose lowest edge is at `bottom`, which must lie inside the safe zone's height. */
@@ -120,7 +118,9 @@ export function overlaySvg(platform = "all", size, options = {}) {
 /** How many words fit in a length, at each of the three speaking-rate presets. */
 export function wordsFor(seconds) {
   if (!isPositive(seconds)) throw new RangeError("seconds must be a number above 0");
-  return speakingRates.rates.map((r) => ({ id: r.id, wpm: r.wpm, words: Math.floor((seconds * r.wpm) / 60) }));
+  const rows = speakingRates.rates.map((r) => ({ id: r.id, wpm: r.wpm, words: Math.floor((seconds * r.wpm) / 60) }));
+  if (!rows.every((r) => Number.isSafeInteger(r.words))) throw new RangeError("seconds is too large");
+  return rows;
 }
 
 /** Rounds for display: one decimal by default. */
