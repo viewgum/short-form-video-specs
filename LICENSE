@@ -1,4 +1,4 @@
-Code (bin/, scripts/, index.mjs, index.d.ts, test.mjs): MIT License
+MIT License
 
 Copyright (c) 2026 ViewGum
 
@@ -13,9 +13,3 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
 CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-Data (data/, lib/data.mjs) and images (templates/): Creative Commons Attribution 4.0 International (CC BY 4.0)
-https://creativecommons.org/licenses/by/4.0/
-Credit: "ViewGum, viewgum.com". The figures come from the sources listed with each one in data/.
-
-The ViewGum name and logo are trademarks of ViewGum and are not licensed by either license above.

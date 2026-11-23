@@ -121,9 +121,11 @@ Each source has a `checked` date. If an app moves its overlays or changes a limi
 ## License
 
 Code (`bin/`, `scripts/`, `index.mjs`, `index.d.ts`, `test.mjs`): MIT. Data (`data/`, `lib/data.mjs`) and images
-(`templates/`): CC BY 4.0, credit "ViewGum, viewgum.com". See [LICENSE](LICENSE).
+(`templates/`): CC BY 4.0, credit "ViewGum, viewgum.com". See [LICENSE](LICENSE), [LICENSE-DATA](LICENSE-DATA) and [NOTICE](NOTICE).
 
 ## Maintainer
 
 Maintained by [ViewGum](https://viewgum.com). The same figures run the browser checker at
-[viewgum.com/safe-zones](https://viewgum.com/safe-zones), which checks a frame of your own without uploading it.
+[viewgum.com/safe-zones](https://viewgum.com/safe-zones), which checks a frame of your own without uploading it. Each app's
+length, frame and resolution limits with their sources are written up at
+[viewgum.com/guides/short-form-video-specs](https://viewgum.com/guides/short-form-video-specs).

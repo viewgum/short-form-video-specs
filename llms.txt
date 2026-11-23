@@ -1,0 +1,24 @@
+# short-form-video-specs
+
+> Safe zones in pixels for TikTok, YouTube Shorts, Instagram Reels and Facebook Reels on a 1080 x 1920 frame, with length and
+> caption limits, as JSON that names each figure's source and the day it was read, transparent PNG templates, a JavaScript
+> module and a command line tool. No dependencies. Code MIT, data and images CC BY 4.0.
+
+On a 1080 x 1920 frame, text that stays at least 288 px from the top, 672 px from the bottom, 120 px from the left and 192 px from
+the right, and out of the right 300 px below y = 840, is inside all four apps' published 9:16 safe zones at once. The apps publish
+pixel figures only in their 9:16 ad guidance, so these are those presets, not a guarantee.
+
+- [README](https://github.com/viewgum/short-form-video-specs/blob/main/README.md): the tables, the CLI and the module
+- [data/safe-zones.json](https://github.com/viewgum/short-form-video-specs/blob/main/data/safe-zones.json): the boxes per app, with sources
+- [data/length-limits.json](https://github.com/viewgum/short-form-video-specs/blob/main/data/length-limits.json): length limits per app and route
+- [data/text-limits.json](https://github.com/viewgum/short-form-video-specs/blob/main/data/text-limits.json): title, caption and hashtag limits
+- [data/speaking-rates.json](https://github.com/viewgum/short-form-video-specs/blob/main/data/speaking-rates.json): words that fit a length
+- [templates/](https://github.com/viewgum/short-form-video-specs/tree/main/templates): PNG overlays at 1080 x 1920
+
+Run: npx github:viewgum/short-form-video-specs check --rect 140,900,600,200 --platform all
+
+## Related
+
+- [Safe zone checker in the browser](https://viewgum.com/safe-zones): checks a frame of your own without uploading it
+- [Short-form video specs guide](https://viewgum.com/guides/short-form-video-specs)
+- [shortform-preflight](https://github.com/viewgum/shortform-preflight): checks a video file against the same apps' upload limits

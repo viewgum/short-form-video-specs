@@ -13,7 +13,7 @@
     "./speaking-rates.json": "./data/speaking-rates.json"
   },
   "bin": { "sfspecs": "bin/sfspecs.mjs" },
-  "files": ["bin", "data", "lib", "templates", "index.mjs", "index.d.ts", "LICENSE", "README.md"],
+  "files": ["bin", "data", "lib", "templates", "index.mjs", "index.d.ts", "LICENSE", "LICENSE-DATA", "NOTICE", "README.md"],
   "scripts": {
     "build": "node scripts/build-data.mjs",
     "test": "node test.mjs"

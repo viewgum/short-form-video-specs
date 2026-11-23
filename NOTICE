@@ -1,0 +1,9 @@
+Which license covers what
+
+Code (bin/, scripts/, index.mjs, index.d.ts, test.mjs): MIT License, see LICENSE.
+
+Data (data/, lib/data.mjs) and images (templates/): Creative Commons Attribution 4.0 International (CC BY 4.0), see
+LICENSE-DATA or https://creativecommons.org/licenses/by/4.0/
+Credit: "ViewGum, viewgum.com". The figures come from the sources listed with each one in data/.
+
+The ViewGum name and logo are trademarks of ViewGum and are not licensed by either license.
